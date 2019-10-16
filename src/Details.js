@@ -5,7 +5,7 @@ import Main from './Main'
 import moment from 'moment'
 import TimePicker from 'react-native-24h-timepicker';    
 var todayDate =  new Date();
-  export default class Details extends React.Component{
+export default class Details extends React.Component{
   constructor(props) {
     super(props); 
     this.state = {
@@ -16,6 +16,7 @@ var todayDate =  new Date();
       storedData:[],
       currentTime:moment(new Date()).format("HH:mm"),
       currentDate:moment(new Date()).format("YYYY-MM-DD"),
+      notState:false,
     };
   }
 
@@ -37,7 +38,10 @@ var todayDate =  new Date();
   }
  
   componentDidUpdate(){
-    
+    if(this.state.currentDate===this.state.dueDate){
+        this.setState({notState:true});
+    }
+    console.log("AppState" , notState)
   }
     render(){
         const { navigation } = this.props;  

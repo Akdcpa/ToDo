@@ -18,7 +18,7 @@ const stackNav = createStackNavigator({
         },
 },
 {
-    initialRouteName:"PushNot",
+    initialRouteName:"Details",
 },
 )
 const AppContainer  = createAppContainer(stackNav);

@@ -11,7 +11,7 @@ export default class PushNot extends React.Component{
         super(props);
         this.handleAppStateChange = this.handleAppStateChange.bind(this);
         this.state={
-            seconds:5,
+            seconds:1,
         }
     }
     componentDidMount(){
