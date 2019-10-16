@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import { StyleSheet,Text, TextInput, View, Button, TouchableOpacity,Image} from 'react-native';
+import { StyleSheet,Text, TextInput, View, Button, TouchableOpacity,Image,AppState} from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Main from './Main'
 import moment from 'moment'
+import PushNotification from 'react-native-push-notification'
+
 import TimePicker from 'react-native-24h-timepicker';    
 var todayDate =  new Date();
 export default class Details extends React.Component{
@@ -38,10 +40,19 @@ export default class Details extends React.Component{
   }
  
   componentDidUpdate(){
+    const { navigation } = this.props;  
+    const name = navigation.getParam('name'); 
+
     if(this.state.currentDate===this.state.dueDate){
-        this.setState({notState:true});
+      // ()=>{ this.setState({notState:true});}
+      console.log("AppState" ,"true")
+      PushNotification.localNotificationSchedule({
+
+        message:"Time Up for"+{name},
+        date:new Date(Date.now())
+    })
+
     }
-    console.log("AppState" , notState)
   }
     render(){
         const { navigation } = this.props;  
@@ -110,6 +121,7 @@ export default class Details extends React.Component{
             <Text style = {{color:'white' , textAlign:'center',fontSize:20,marginTop:10  }}> Save </Text>
             </TouchableOpacity>
             </View>
+
           </View>
         );
     }
