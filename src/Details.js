@@ -2,55 +2,56 @@ import React, { Component, PropTypes } from 'react';
 import { StyleSheet,Text, TextInput, View, Button, TouchableOpacity,Image} from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Main from './Main'
-import TimePicker from 'react-native-24h-timepicker';       
+import moment from 'moment'
+import TimePicker from 'react-native-24h-timepicker';    
 var todayDate =  new Date();
   export default class Details extends React.Component{
   constructor(props) {
     super(props); 
     this.state = {
       isDateTimePickerVisible: false,
-      date:"",
+      dueDate:'',
       res:'',
-      time:'',
+      dueTime:'',
+      storedData:[],
+      currentTime:moment(new Date()).format("HH:mm"),
+      currentDate:moment(new Date()).format("YYYY-MM-DD"),
     };
   }
 
   static navigationOptions = {  
-    title: 'Empty',  
+    title: 'Task',  
     headerStyle: {  
         backgroundColor: '#1EB8A7',  
     },
     headerTintColor:'#fff',
-    time:'',
-
   };
-  onChange = time => this.setState({ time })
+  onChange = dueTime => this.setState({ dueTime })
   onCancel() {
     this.TimePicker.close();
   }
  
   onConfirm(hour, minute) {
-    this.setState({ time: `${hour}:${minute}` });
+    this.setState({ dueTime: `${hour}:${minute}` });
     this.TimePicker.close();
   }
  
-  dateListener(){
-    console.log(this.date);
+  componentDidUpdate(){
+    
   }
     render(){
         const { navigation } = this.props;  
        
         const name = navigation.getParam('name'); 
         const index = navigation.getParam('index');       
-  
-        console.log("Detailed Name",index);
-        console.log("KeyValueD ", index);
+        // console.log("Detailed Name",name);
+        // console.log("Detailes KeyValueD ", index);
 
         return(
         
             <View style={styles.container}>
             <View style={{textAlign:'center'}} >
-                <Text style={{textAlign:'center',fontSize:25}} >vnjdfg</Text>
+                <Text style={{textAlign:'center',fontSize:25}} >{name}</Text>
             </View>
               <TextInput
                 multiline={true}
@@ -62,7 +63,7 @@ var todayDate =  new Date();
         {/* <View style={{flexDirection:'row'}}> */}
              <DatePicker
                         style={{width: 200 , padding:18}}
-                        date={this.state.date}
+                        date={this.state.dueDate}
                         mode="date"
                         placeholder="select date"
                         format="YYYY-MM-DD"
@@ -81,7 +82,7 @@ var todayDate =  new Date();
                             borderRadius:5,
                           }
                         }}
-        onDateChange={(date) => {this.setState({date: date})}}
+        onDateChange={(date) => {this.setState({dueDate: date})}}
       />
       <View style={{flexDirection:'row',paddingLeft:18}} >
        <Image  style={{width: 30, height: 30 }} source={require('./Images/timer.png')} />
@@ -89,7 +90,7 @@ var todayDate =  new Date();
           onPress={() => this.TimePicker.open()}
           style={{borederWidth:1 , marginLeft:5}}>
        <Text placeholder="select date" style={{borderWidth:2,borderColor:'#B0B0B0',height:35,borderRadius:5,
-       width:130,textAlign:'center',justifyContent:'center',fontSize:16}}  >{this.state.time}</Text>       
+       width:130,textAlign:'center',justifyContent:'center',fontSize:16}}  >{this.state.dueTime}</Text>       
         </TouchableOpacity>
         <TimePicker
           ref={ref => {
@@ -100,7 +101,8 @@ var todayDate =  new Date();
         />
         </View>
         <View style={{alignItems:'center',marginTop:30 }} >
-            <TouchableOpacity onPress={()=>this.props.navigation.navigate('Main')} title="Add" style={styles.submitButton}>
+            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Main');
+            console.log("Console Date",this.state.dueDate ,this.state.currentDate , this.state.dueTime ,this.state.currentTime )}} title="Add" style={styles.submitButton}>
             <Text style = {{color:'white' , textAlign:'center',fontSize:20,marginTop:10  }}> Save </Text>
             </TouchableOpacity>
             </View>

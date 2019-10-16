@@ -1,6 +1,7 @@
 import React , {Component} from 'react'
 import {Text , View , FlatList, StyleSheet,TextInput , TouchableOpacity } from 'react-native'
 import Details from './Details'
+import Toast from 'react-native-simple-toast'
 export default class Main extends React.Component {
 
     constructor(props) {
@@ -32,7 +33,7 @@ export default class Main extends React.Component {
     this.setState({dataValue:[...this.array]})
     }
     componentDidUpdate(){
-        console.log("kyes" ,this.state.dataValue)
+        console.log("Key paramater" ,this.state.parameter)
     }
     _submitButton=()=>{
             // datavalue.push(this.text)
@@ -42,10 +43,13 @@ export default class Main extends React.Component {
         this.array.push({name:this.state.text ,key:this.state.keyValue })
         this.setState({dataValue:[...this.array]})
     }
+    if(this.state.text===''){
+        Toast.show("Type anything")
+    }
     this.setState({text:''})
     }
-    _onPressDetails=()=>{
-        this.props.navigation.navigate('Details',{name:this.state.dataValue,index:this.state.parameter})
+    _onPressDetails(itemname ,index1){
+        this.props.navigation.navigate('Details',{name:itemname,index:index1})
     }
     render(){
 
@@ -66,11 +70,11 @@ export default class Main extends React.Component {
                 <FlatList data={this.state.dataValue}
                 keyExtractor={(index)=>index.toString()}
                 renderItem={({item,index}) =>  
-                <TouchableOpacity  onPress={this._onPressDetails.bind(this),()=>this.setState({parameter:index})}  >
-            <Text style={styles.input}>{item.name}
+                <TouchableOpacity  onPress={()=>{this._onPressDetails(item.name,index);}}  >
+                <Text style={styles.input}>{item.name}
                 </Text>
                 </TouchableOpacity>}  
-                ItemSeparatorComponen t={this.renderSeparator}  
+                ItemSeparatorComponent={this.renderSeparator}  
                     />  
         </View>  
 );  

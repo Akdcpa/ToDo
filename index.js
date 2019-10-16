@@ -3,6 +3,7 @@ import App from './App';
 import Main from './src/Main'
 import Details from './src/Details'
 import {name as appName} from './app.json';
+import PushNot from './src/PushNot'
 import {createStackNavigator} from 'react-navigation-stack'
 import { createAppContainer  } from 'react-navigation'
 const stackNav = createStackNavigator({
@@ -12,10 +13,12 @@ const stackNav = createStackNavigator({
         Details:{
             screen:Details
         },
-
+        PushNot:{
+            screen:PushNot
+        },
 },
 {
-    initialRouteName:"Main",
+    initialRouteName:"PushNot",
 },
 )
 const AppContainer  = createAppContainer(stackNav);
