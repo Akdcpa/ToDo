@@ -3,8 +3,11 @@ import App from './App';
 import Main from './src/Main'
 import Details from './src/Details'
 import {name as appName} from './app.json';
+import Login from './src/Authentication/Login';
+import Register from './src/Authentication/Register';
 import {createStackNavigator} from 'react-navigation-stack'
 import { createAppContainer  } from 'react-navigation'
+import Splash from './src/Splash'
 const stackNav = createStackNavigator({
         Main:{
             screen:Main,
@@ -12,9 +15,18 @@ const stackNav = createStackNavigator({
         Details:{
             screen:Details
         },
+        Login:{
+            screen:Login
+        },
+        Register:{
+            screen:Register,
+        },
+        Splash:{
+            screen:Splash
+        },
 },
 {
-    initialRouteName:"Details",
+    initialRouteName:"Splash",
 },
 )
 const AppContainer  = createAppContainer(stackNav);

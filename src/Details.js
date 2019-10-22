@@ -41,18 +41,20 @@ export default class Details extends React.Component{
  
   componentDidUpdate(){
     const { navigation } = this.props;  
-    const name = navigation.getParam('name'); 
-
+    const name = navigation.getParam('name');
+    console.log("Current Time : " , this.state.currentTime, this.state.dueTime)
     if(this.state.currentDate===this.state.dueDate){
       // ()=>{ this.setState({notState:true});}
-      console.log("AppState" ,"true")
+      // console.log("AppState" ,"true")
       PushNotification.localNotificationSchedule({
-
         message:"Time Up for"+{name},
         date:new Date(Date.now())
     })
 
     }
+  }
+  componentDidMount(){
+    console.log("Current Time : " , this.state.currentTime)
   }
     render(){
         const { navigation } = this.props;  

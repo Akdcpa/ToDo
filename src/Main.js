@@ -1,5 +1,5 @@
 import React , {Component} from 'react'
-import {Text , View , FlatList, StyleSheet,TextInput , TouchableOpacity } from 'react-native'
+import {Text , View , FlatList, StyleSheet,TextInput , TouchableOpacity,Button } from 'react-native'
 import Details from './Details'
 import Toast from 'react-native-simple-toast'
 export default class Main extends React.Component {
@@ -18,11 +18,17 @@ export default class Main extends React.Component {
       }
     }
     static navigationOptions = {  
-        title: 'Home',  
+        title: 'Home', 
+    headerLeft:null,
     headerStyle: {  
         backgroundColor: '#1EB8A7',  
     },  
     headerTintColor:'#fff',
+    headerRight: () => (
+        <Button
+          title="Logout"
+          color="#fff"
+        />),
     };  
     renderSeperator=()=>{
         return(
