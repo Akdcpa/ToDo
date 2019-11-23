@@ -48,25 +48,18 @@ constructor(props) {
     UserLoginFunction = () =>{
       const {UserName}=this.state.UserName;
       const {UserPassword}=this.state.UserPassword;
-     fetch('http://localhost/developments/todo/display_data.php', {
+     fetch('http://192.168.137.36/developments/todo/display_data.php', {
        method: 'POST',
        headers: {
          'Accept': 'application/json',
          'Content-Type': 'application/json',
        },
        body: JSON.stringify({
-         name: UserName,
-         password: UserPassword
+         name:"cmkdsf",
+         password:"cnbdjf",
        })
      }).then((response) => response.json())
-           .then((responseJson) => {
-            if(responseJson === 'Data Matched')
-             {
-                 this.props.navigation.navigate('Main', { name: UserName });}
-             else{
-               Alert.alert(responseJson);
-             }
-           }).catch((error) => {
+           .then((responseJson) => {Alert.alert(responseJson)}).catch((error) => {
              console.error(error);
            });
        }

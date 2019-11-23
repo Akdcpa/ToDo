@@ -26,7 +26,7 @@ const stackNav = createStackNavigator({
         },
 },
 {
-    initialRouteName:"Splash",
+    initialRouteName:"Register",
 },
 )
 const AppContainer  = createAppContainer(stackNav);

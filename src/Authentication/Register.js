@@ -26,10 +26,34 @@ export default class Register extends Component {
 constructor(props) {
     super(props)
     this.state = {
-      UserName: '',
-      UserPassword: '',
-      UserEmail:'',
+      userName: '',
+      userPassword: '',
+      userEmail:'',
     }}
+
+    UserRegistrationFunction = () =>{
+      const { userName }  = this.state.userName ;
+      const { userEmail }  = this.state.userEmail ;
+      const { userPassword }  = this.state.userPassword ;
+     fetch('http://localhost/developments/todo/Login_Data.php', {
+       method: 'POST',
+       headers: {
+         'Accept': 'application/json',
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({
+         name: "aanand",
+         email: "ak@gmail.com",
+         password:"12345"
+       })
+      
+     }).then((response) => response.json())
+           .then((responseJson) => {
+             Alert.alert(responseJson);
+           }).catch((error) => {
+             console.error(error);
+           });
+       }
   render() {
     return (
 <View>  
@@ -41,23 +65,23 @@ constructor(props) {
           placeholder="Username"
           underlineColorAndroid='blue'
           style={styles.TextInputStyleClass}
-          onChange={(text)=>this.setState({UserName:text})}
+          onChange={(text)=>this.setState({userName:text})}
         />
         <TextInput
           placeholder="Email"
           underlineColorAndroid='blue'
           autoCompleteType='email'
           style={styles.TextInputStyleClass}
-          onChange={(text)=>this.setState({UserEmail:text})}
+          onChange={(text)=>this.setState({userEmail:text})}
         />
         <TextInput
           placeholder="Password"
           underlineColorAndroid='blue'
           style={styles.TextInputStyleClass}
-          onChange={(text)=>this.setState({UserPassword:text})}
+          onChange={(text)=>this.setState({userPassword:text})}
           secureTextEntry={true}
         />
-        <TouchableOpacity style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
+        <TouchableOpacity onPress={this.UserRegistrationFunction} style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
        margin:16,textAlign:'center',borderColor:"0B6AEC", justifyContent:'center',fontSize:16}} >
        <Text style={{color:'white' ,fontWeight:'bold' ,fontSize:16, textAlign:'center'}}>Register</Text>       
       </TouchableOpacity>
