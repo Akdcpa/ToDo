@@ -75,7 +75,7 @@ export default class Details extends React.Component{
                 numberOfLines={10}
                 style={{ height:100,marginTop:10,
                 textAlignVertical: 'top',
-                backgroundColor:'#808080',
+                backgroundColor:'#FFF',
                 borderWidth:4,borderRadius:5,borderColor:"#BDD9D6"}}/>
         {/* <View style={{flexDirection:'row'}}> */}
              <DatePicker
@@ -118,7 +118,7 @@ export default class Details extends React.Component{
         />
         </View>
         <View style={{alignItems:'center',marginTop:30 }} >
-            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Main');
+            <TouchableOpacity style={{backgroundColor:'#29AEF9'}} onPress={()=>{this.props.navigation.navigate('Main');
             console.log("Console Date",this.state.dueDate ,this.state.currentDate , this.state.dueTime ,this.state.currentTime )}} title="Add" style={styles.submitButton}>
             <Text style = {{color:'white' , textAlign:'center',fontSize:20,marginTop:10  }}> Save </Text>
             </TouchableOpacity>

@@ -26,7 +26,7 @@ const stackNav = createStackNavigator({
         },
 },
 {
-    initialRouteName:"Register",
+    initialRouteName:"Main",
 },
 )
 const AppContainer  = createAppContainer(stackNav);

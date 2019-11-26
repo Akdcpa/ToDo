@@ -2,6 +2,7 @@ import React , {Component} from 'react'
 import {Text , View , FlatList, StyleSheet,TextInput , TouchableOpacity,Button } from 'react-native'
 import Details from './Details'
 import Toast from 'react-native-simple-toast'
+// import MenuButton from 'react-native-menu-button'
 export default class Main extends React.Component {
 
     constructor(props) {
@@ -17,6 +18,7 @@ export default class Main extends React.Component {
          keyValue:0,
       }
     }
+    menu = [{key:0,value:"out",text:"Logout"} , {key:1,value:"vf" , text:"choose"}]
     static navigationOptions = {  
         title: 'Home', 
     headerLeft:null,
@@ -24,11 +26,11 @@ export default class Main extends React.Component {
         backgroundColor: '#1EB8A7',  
     },  
     headerTintColor:'#fff',
-    headerRight: () => (
-        <Button
-          title="Logout"
-          color="#fff"
-        />),
+    // headerRight: () => (
+    //     // <View>
+    //     //     <MenuButton   />
+    //     // </View>
+    //     ),
     };  
     renderSeperator=()=>{
         return(
@@ -124,5 +126,12 @@ export default class Main extends React.Component {
                 height: 50,
                 borderRadius:5
              },
+             rightButton: {
+                width: 100,
+                height: 37,
+                position: 'absolute',
+                bottom: 8,
+                right: 2,
+                padding: 8
+              },
 });
-
