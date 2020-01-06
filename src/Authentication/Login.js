@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, View, Alert, Button, Text , TouchableOpacity , I
 import Register from './Register'
 import Toast from 'react-native-simple-toast'
 import Logo from './../Images/back.jpeg'
+import Main from '../Main'
 export default class Login extends Component {
 
   static navigationOptions = {  
@@ -29,44 +30,58 @@ constructor(props) {
     super(props)
     this.state = {
       UserName: '',
-      UserPassword: ''
+      UserPassword: '',
+      Login_Status:false,
     }}
     _loginButton=()=>{
       if(this.state.UserName===''){
         Toast.show("Enter valid username");
       }
       else{
-        if(this.state.UserPassword.length<8){
+        if(this.state.UserPassword.length<0){
           Toast.show("Enter Valid Password");
         }
         else{
-          this.props.navigation.navigate('Main')
+          if(this.state.Login_Status===true)
+          {
+          this.props.navigation.navigate('Main')}
+          else{
+            Toast.show("Already LoggedIn");
+          }
           // this.UserLoginFunction
         }
       }
     }
+    componentDidUpdate(){
+      console.log(this.state.Login_Status);
+    }
     UserLoginFunction = () =>{
-      const {UserName}=this.state.UserName;
-      const {UserPassword}=this.state.UserPassword;
-     fetch('http://192.168.137.36/developments/todo/display_data.php', {
+      const {UserName}=this.state;
+      const {UserPassword}=this.state;
+     fetch('http://10.42.0.1/developments/todo/Login_Data.php', {
        method: 'POST',
        headers: {
          'Accept': 'application/json',
          'Content-Type': 'application/json',
        },
        body: JSON.stringify({
-         name:"cmkdsf",
-         password:"cnbdjf",
+         name:UserName,
+         password:UserPassword,
        })
-     }).then((response) => response.json())
-           .then((responseJson) => {Alert.alert(responseJson)}).catch((error) => {
+     }).then((response) => response.text())
+           .then((responseJson) => {
+             console.log(responseJson)
+             if(responseJson === "Loggedin"){
+                this.setState({Login_Status:true})
+             }
+           }).catch((error) => {
              console.error(error);
            });
        }
   render() {
     return (
  <View>  
-  <ImageBackground source={Logo} style={{width:'100%' ,height:'100%'}}>
+  <ImageBackground  style={{width:'100%' ,height:'100%'}}>
     <View style={styles.MainContainer} >
     <Text style={{fontSize:30 , fontWeight:'bold' , textAlign:'center' , marginBottom:10}} >Login</Text>
     <View>
@@ -74,7 +89,7 @@ constructor(props) {
           placeholder="Username"
           underlineColorAndroid='black'
           value={this.state.UserName}
-          onChangeText={(text)=>this.setState({UserName:text})}
+          onChangeText={UserName=>{this.setState({UserName})}}
           style={styles.TextInputStyleClass}
         />
         <TextInput
@@ -82,18 +97,18 @@ constructor(props) {
           underlineColorAndroid='black'
           style={styles.TextInputStyleClass}
           value={this.state.UserPassword}
-          onChangeText={(text)=>this.setState({UserPassword:text})}
+          onChangeText={UserPassword=>{this.setState({UserPassword})}}
           secureTextEntry={true}
         />
-        <TouchableOpacity onPress={this.UserLoginFunction} style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
+        <TouchableOpacity onPress={this._loginButton} style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
        margin:16,textAlign:'center',borderColor:"0B6AEC", justifyContent:'center',fontSize:16}} >
        <Text style={{color:'white' ,fontWeight:'bold' ,fontSize:16, textAlign:'center'}}>Login</Text>       
       </TouchableOpacity>
       </View>
       <View style={{flexDirection:"row" ,justifyContent:'center' , }} >
-        <Text style={{fontSize:14 , color:'#fff'}} >Don't have an account?</Text>
+        <Text style={{fontSize:14 , color:'#363636'}} >Don't have an account?</Text>
         <TouchableOpacity onPress={()=>this.props.navigation.navigate('Register')} >
-        <Text style={{fontSize:15,fontWeight:'bold' , color:'#fff'}} > Register</Text></TouchableOpacity>
+        <Text style={{fontSize:15,fontWeight:'bold' , color:'#363636'}} > Register</Text></TouchableOpacity>
       </View>
       </View>
       </ImageBackground>
@@ -113,7 +128,7 @@ TextInputStyleClass: {
 textAlign:'left',
 height: 40,
 margin:16,
-color:'white',
+color:'#363636',
 },
 buttonStyle:{
     margin:16,

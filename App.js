@@ -20,7 +20,7 @@ import Details from './src/Details';
 export default class App extends React.Component{
   render(){
     return(
-      <Main/>
+      <Register/>
       // <Details/>
     );
   }

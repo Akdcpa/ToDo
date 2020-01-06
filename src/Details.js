@@ -1,3 +1,5 @@
+
+
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet,Text, TextInput, View, Button, TouchableOpacity,Image,AppState} from 'react-native';
 import DatePicker from 'react-native-datepicker';
@@ -20,8 +22,10 @@ export default class Details extends React.Component{
       currentDate:moment(new Date()).format("YYYY-MM-DD"),
       notState:false,
     };
+    const { navigation } = this.props;  
+    this.name = navigation.getParam('name'); 
+    console.log("Constructor"+this.name)
   }
-
   static navigationOptions = {  
     title: 'Task',  
     headerStyle: {  
@@ -40,35 +44,31 @@ export default class Details extends React.Component{
   }
  
   componentDidUpdate(){
-    const { navigation } = this.props;  
-    const name = navigation.getParam('name');
+
+    // const { navigation } = this.props;  
+    // const name = navigation.getParam(this.name);
     console.log("Current Time : " , this.state.currentTime, this.state.dueTime)
-    if(this.state.currentDate===this.state.dueDate){
+    if(this.state.currentDate===this.state.dueDate){ 
       // ()=>{ this.setState({notState:true});}
       // console.log("AppState" ,"true")
       PushNotification.localNotificationSchedule({
-        message:"Time Up for"+{name},
-        date:new Date(Date.now())
+        message:"Time Up for "+this.name,
+        date:new Date(Date.now()),
     })
-
     }
   }
   componentDidMount(){
     console.log("Current Time : " , this.state.currentTime)
   }
     render(){
-        const { navigation } = this.props;  
-       
-        const name = navigation.getParam('name'); 
-        const index = navigation.getParam('index');       
+        // const index = navigation.getParam('index');       
         // console.log("Detailed Name",name);
         // console.log("Detailes KeyValueD ", index);
-
         return(
         
             <View style={styles.container}>
             <View style={{textAlign:'center'}} >
-                <Text style={{textAlign:'center',fontSize:25}} >{name}</Text>
+        <Text style={{textAlign:'center',fontSize:25}} >{this.name}</Text>
             </View>
               <TextInput
                 multiline={true}
@@ -123,7 +123,7 @@ export default class Details extends React.Component{
             <Text style = {{color:'white' , textAlign:'center',fontSize:20,marginTop:10  }}> Save </Text>
             </TouchableOpacity>
             </View>
-
+    
           </View>
         );
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, TextInput, View, Alert, Button, Text , TouchableOpacity , ImageBackground} from 'react-native';
 import Logo from './../Images/back.jpeg'
-
+import Login from './Login'
 export default class Register extends Component {
   static navigationOptions = {  
     title: 'ToDo',
@@ -31,24 +31,30 @@ constructor(props) {
       userEmail:'',
     }}
 
+    componentDidUpdate(){
+      console.log("UserName",this.state.userName);
+      console.log("UserName",this.state.userEmail);
+      console.log("UserName",this.state.userPassword);
+    }
+
     UserRegistrationFunction = () =>{
-      const { userName }  = this.state.userName ;
-      const { userEmail }  = this.state.userEmail ;
-      const { userPassword }  = this.state.userPassword ;
-     fetch('http://localhost/developments/todo/Login_Data.php', {
+      const { userName }  = this.state;
+      const { userEmail }  = this.state;
+      const { userPassword }  = this.state;
+     fetch('http://192.168.137.248/developments/todo/user_register.php', {
        method: 'POST',
        headers: {
          'Accept': 'application/json',
          'Content-Type': 'application/json',
        },
        body: JSON.stringify({
-         name: "aanand",
-         email: "ak@gmail.com",
-         password:"12345"
+         name: userName,
+         email: userEmail,
+         password:userPassword,
        })
       
-     }).then((response) => response.json())
-           .then((responseJson) => {
+     }).then((response) => response.text())
+           .then((responseJson) => { 
              Alert.alert(responseJson);
            }).catch((error) => {
              console.error(error);
@@ -57,28 +63,30 @@ constructor(props) {
   render() {
     return (
 <View>  
-  <ImageBackground source={Logo} style={{width:'100%' ,height:'100%'}}>
+  <ImageBackground  style={{width:'100%' ,height:'100%'}}>
     <View style={styles.MainContainer} >
     <Text style={{fontSize:30 , fontWeight:'bold' , textAlign:'center' , marginBottom:10}} >Register</Text>
     <View>
         <TextInput
           placeholder="Username"
-          underlineColorAndroid='blue'
+          underlineColorAndroid='363636'
           style={styles.TextInputStyleClass}
-          onChange={(text)=>this.setState({userName:text})}
+          // onChange={(text)=>this.setState({userName:text})}
+          onChangeText={userName=>this.setState({userName})}
         />
         <TextInput
           placeholder="Email"
-          underlineColorAndroid='blue'
+          underlineColorAndroid='363636'
           autoCompleteType='email'
           style={styles.TextInputStyleClass}
-          onChange={(text)=>this.setState({userEmail:text})}
+          onChangeText={userEmail=>this.setState({userEmail})}
+
         />
         <TextInput
           placeholder="Password"
-          underlineColorAndroid='blue'
+          underlineColorAndroid='363636'
           style={styles.TextInputStyleClass}
-          onChange={(text)=>this.setState({userPassword:text})}
+          onChangeText={userPassword=>this.setState({userPassword})}
           secureTextEntry={true}
         />
         <TouchableOpacity onPress={this.UserRegistrationFunction} style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
@@ -87,9 +95,9 @@ constructor(props) {
       </TouchableOpacity>
       </View>
       <View style={{flexDirection:"row" ,justifyContent:'center' , }} >
-        <Text style={{fontSize:14 , color:'white'}} >Already have an account?</Text>
-        <TouchableOpacity onPress={()=>this.props.navigation.goBack()} >
-        <Text style={{fontSize:15,fontWeight:'bold' , color:'white'}} >Login</Text></TouchableOpacity>
+        <Text style={{fontSize:14 , color:'#363636'}} >Already have an account?</Text>
+        <TouchableOpacity onPress={()=>this.props.navigation.navigate('Login')} >
+        <Text style={{fontSize:15,fontWeight:'bold' , color:'#363636'}} >Login</Text></TouchableOpacity>
       </View>
 
       </View>
@@ -109,7 +117,7 @@ TextInputStyleClass: {
 textAlign:'left',
 height: 40,
 margin:16,
-color:'white',
+color:'#363636',
 },
 buttonStyle:{
     margin:16,

@@ -78,17 +78,24 @@ export default class Main extends React.Component {
                 <FlatList data={this.state.dataValue}
                 keyExtractor={(index)=>index.toString()}
                 renderItem={({item,index}) =>  
-                <TouchableOpacity  onPress={()=>{this._onPressDetails(item.name,index);}}  >
-                <Text style={styles.input}>{item.name}
-                </Text>
+                <TouchableOpacity style={{justifyContent:'center'}} onPress={()=>{this._onPressDetails(item.name,index);}}  >
+                <View  style={{
+                margin: 15,
+                height: 60,
+                fontSize:16,
+                borderColor: '#E68981',
+                borderWidth: 2.3,
+                borderRadius:8,
+                // marginTop:10,
+                justifyContent:'center',
+                }} >
+                <Text style={{alignItems:'center'}} >{item.name}</Text></View>
                 </TouchableOpacity>}  
-                ItemSeparatorComponent={this.renderSeparator}  
-                    />  
+                ItemSeparatorComponent={this.renderSeparator}  />  
         </View>  
 );  
 } 
 }
-
  const styles = StyleSheet.create({
             container:{
                 flex:1,
