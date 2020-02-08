@@ -6,9 +6,11 @@ import DatePicker from 'react-native-datepicker';
 import Main from './Main'
 import moment from 'moment'
 import PushNotification from 'react-native-push-notification'
-
 import TimePicker from 'react-native-24h-timepicker';    
+import firebase from "react-native-firebase";
+
 var todayDate =  new Date();
+
 export default class Details extends React.Component{
   constructor(props) {
     super(props); 
@@ -45,9 +47,11 @@ export default class Details extends React.Component{
  
   componentDidUpdate(){
 
-    // const { navigation } = this.props;  
-    // const name = navigation.getParam(this.name);
-    console.log("Current Time : " , this.state.currentTime, this.state.dueTime)
+    const { navigation } = this.props;  
+    const name = navigation.getParam(this.name);
+    var mins = moment.utc(moment(this.state.currentTime, "HH:mm:ss").diff(moment(this.state.dueTime, "HH:mm:ss"))).format("mm")
+
+    // console.log("Current Time : " , this.state.currentTime, this.state.dueTime)
     if(this.state.currentDate===this.state.dueDate){ 
       // ()=>{ this.setState({notState:true});}
       // console.log("AppState" ,"true")
@@ -56,9 +60,11 @@ export default class Details extends React.Component{
         date:new Date(Date.now()),
     })
     }
+    console.log("Current Time : " , this.state.currentTime , mins);
+
   }
   componentDidMount(){
-    console.log("Current Time : " , this.state.currentTime)
+    // console.log("Current Time : " , this.state.currentTime);
   }
     render(){
         // const index = navigation.getParam('index');       

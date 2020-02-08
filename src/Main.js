@@ -1,7 +1,12 @@
 import React , {Component} from 'react'
-import {Text , View , FlatList, StyleSheet,TextInput , TouchableOpacity,Button } from 'react-native'
+import {Text , View , FlatList, StyleSheet,TextInput ,Image ,Alert , TouchableOpacity,Button } from 'react-native'
 import Details from './Details'
 import Toast from 'react-native-simple-toast'
+// import Icon from 'react-native-vector-icons'
+import Login from './Authentication/Login'
+// import Logout_icon from './Images/logout.png'
+import log_icon from './Images/logout.png'
+import Icon from 'react-native-vector-icons/FontAwesome'
 // import MenuButton from 'react-native-menu-button'
 export default class Main extends React.Component {
 
@@ -26,16 +31,40 @@ export default class Main extends React.Component {
         backgroundColor: '#1EB8A7',  
     },  
     headerTintColor:'#fff',
-    // headerRight: () => (
-    //     // <View>
-    //     //     <MenuButton   />
-    //     // </View>
-    //     ),
+    headerRight: () => (
+        <View>
+          <TouchableOpacity onPress={()=>this._logOut} > 
+            <Image  style={{width:35 , height:35 , marginRight:20}} source={log_icon} />
+        </TouchableOpacity>
+        </View>
+        ),
+
     };  
+
+    _logOut(){
+        Alert.alert(
+            'Logout',
+            'Are you sure to logout',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'OK', onPress:this._goBack},
+            ],
+            {cancelable: false},
+          );
+          
+
+         }
     renderSeperator=()=>{
         return(
             <View style={{height:1,width:"40%" , backgroundColor:"#fff"}} />
         )
+    }
+    _goBack=()=>{
+        this.props.navigation.navigate('Login')
     }
     componentDidMount(){
     this.setState({dataValue:[...this.array]})
@@ -63,6 +92,7 @@ export default class Main extends React.Component {
 
         return(
         <View style={styles.container} >
+                
             <TextInput placeholder="AddList" 
             style={styles.input} 
             value={this.state.text}
@@ -92,6 +122,7 @@ export default class Main extends React.Component {
                 <Text style={{alignItems:'center'}} >{item.name}</Text></View>
                 </TouchableOpacity>}  
                 ItemSeparatorComponent={this.renderSeparator}  />  
+
         </View>  
 );  
 } 

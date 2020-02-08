@@ -4,6 +4,7 @@ import Register from './Register'
 import Toast from 'react-native-simple-toast'
 import Logo from './../Images/back.jpeg'
 import Main from '../Main'
+import AsyncStorage from '@react-native-community/async-storage'
 export default class Login extends Component {
 
   static navigationOptions = {  
@@ -31,53 +32,70 @@ constructor(props) {
     this.state = {
       UserName: '',
       UserPassword: '',
-      Login_Status:false,
+      Login_Status:'',
     }}
-    _loginButton=()=>{
+    componentDidUpdate(){
+      this.getData();
+    }
+    storeData = async (authtoken) => {
+      try {
+        await AsyncStorage.setItem('@AuthToken', authtoken )
+      } catch (e) {
+        // saving error
+      }
+    }
+    getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@AuthToken')
+        if(value !== null) {
+          console.log("Async Value" , value)
+        }
+      } catch(e) {
+      }
+    }
+    
+    UserLoginFunction = () =>{
+      const {UserName}=this.state;
+      const {UserPassword}=this.state;
+
       if(this.state.UserName===''){
         Toast.show("Enter valid username");
       }
       else{
-        if(this.state.UserPassword.length<0){
+        if(this.state.UserPassword.length<=0){
           Toast.show("Enter Valid Password");
         }
-        else{
-          if(this.state.Login_Status===true)
-          {
-          this.props.navigation.navigate('Main')}
-          else{
-            Toast.show("Already LoggedIn");
-          }
-          // this.UserLoginFunction
-        }
+      else{
+        fetch('http://10.42.0.1/developments/todo/Login_Data.php', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name:UserName,
+            password:UserPassword,
+          })
+        }).then((response) => response.text())
+              .then((responseJson) => {
+                if(responseJson == 'UserName Wrong'){
+                  Toast.show("Invalid username/password")
+                }
+                else if(responseJson == "PasswordWrong"){
+                  Toast.show("Invalid username/password")
+
+                }
+                else{
+                   this.storeData(responseJson);
+                   this.props.navigation.navigate('Main');
+                }
+              }).catch((error) => {
+                console.error(error);
+              });
+           }
+         } 
       }
-    }
-    componentDidUpdate(){
-      console.log(this.state.Login_Status);
-    }
-    UserLoginFunction = () =>{
-      const {UserName}=this.state;
-      const {UserPassword}=this.state;
-     fetch('http://10.42.0.1/developments/todo/Login_Data.php', {
-       method: 'POST',
-       headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify({
-         name:UserName,
-         password:UserPassword,
-       })
-     }).then((response) => response.text())
-           .then((responseJson) => {
-             console.log(responseJson)
-             if(responseJson === "Loggedin"){
-                this.setState({Login_Status:true})
-             }
-           }).catch((error) => {
-             console.error(error);
-           });
-       }
+    
   render() {
     return (
  <View>  
@@ -91,6 +109,8 @@ constructor(props) {
           value={this.state.UserName}
           onChangeText={UserName=>{this.setState({UserName})}}
           style={styles.TextInputStyleClass}
+          autoCapitalize='none'
+          ref={(u) => this._username = u}
         />
         <TextInput
           placeholder="Password"
@@ -99,8 +119,10 @@ constructor(props) {
           value={this.state.UserPassword}
           onChangeText={UserPassword=>{this.setState({UserPassword})}}
           secureTextEntry={true}
+          autoCapitalize='none'
+          ref={(u) => this._username = u}
         />
-        <TouchableOpacity onPress={this._loginButton} style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
+        <TouchableOpacity onPress={this.UserLoginFunction} style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
        margin:16,textAlign:'center',borderColor:"0B6AEC", justifyContent:'center',fontSize:16}} >
        <Text style={{color:'white' ,fontWeight:'bold' ,fontSize:16, textAlign:'center'}}>Login</Text>       
       </TouchableOpacity>

@@ -41,7 +41,7 @@ constructor(props) {
       const { userName }  = this.state;
       const { userEmail }  = this.state;
       const { userPassword }  = this.state;
-     fetch('http://192.168.137.248/developments/todo/user_register.php', {
+     fetch('http://10.42.0.1/developments/todo/user_register.php', {
        method: 'POST',
        headers: {
          'Accept': 'application/json',
