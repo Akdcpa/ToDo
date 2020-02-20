@@ -13,6 +13,7 @@
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/cli-platform-android": "^2.9.0",
     "@react-native-community/datetimepicker": "^2.1.0",
+    "firebase": "^7.8.2",
     "moment": "^2.24.0",
     "react": "16.9.0",
     "react-native": "0.61.2",

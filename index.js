@@ -10,6 +10,7 @@ import {createStackNavigator} from 'react-navigation-stack'
 import { createAppContainer  } from 'react-navigation'
 import Splash from './src/Splash'
 import Index from './src/Index'
+import Dbconfig from './src/Authentication/Dbconfig'
 const stackNav = createStackNavigator({
         Main:{
             screen:Main,
@@ -32,9 +33,12 @@ const stackNav = createStackNavigator({
         Index:{
             screen:Index
         },
+        Dbconfig:{
+            screen:Dbconfig
+        }
 },
 {
-    initialRouteName:"Login"
+    initialRouteName:"Register"
 },
 )
 const AppContainer  = createAppContainer(stackNav);

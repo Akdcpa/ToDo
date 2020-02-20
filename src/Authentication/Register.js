@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import { StyleSheet, TextInput, View, Alert, Button, Text , TouchableOpacity , ImageBackground} from 'react-native';
 import Logo from './../Images/back.jpeg'
 import Login from './Login'
+import firebase from 'firebase'
 export default class Register extends Component {
   static navigationOptions = {  
-    title: 'ToDo',
-    // title:'Register',  
-    // headerLeft:<View style={{padding:6}}></View>,
+    title: 'ToDo', 
     headerStyle: {  
-        backgroundColor: '#363636', 
-        // textAlign:'center' 
-        // alignContent:'center' ,justifyContent:'center' , alignItems:'center'
+        backgroundColor: '#363636',  
     },
     headerLeft:null,
 
@@ -18,8 +15,7 @@ export default class Register extends Component {
       textAlign: 'center',
       flexGrow:1,
       fontSize:25,
-      fontWeight:'bold'
-      // alignSelf:'center',
+      fontWeight:'bold' 
   },
     headerTintColor:'#fff',
   };
@@ -29,37 +25,75 @@ constructor(props) {
       userName: '',
       userPassword: '',
       userEmail:'',
+      userMobile:0,
+      firebaseReference:'ToDo/Register/',
+      response:false,
     }}
 
-    componentDidUpdate(){
-      console.log("UserName",this.state.userName);
-      console.log("UserName",this.state.userEmail);
-      console.log("UserName",this.state.userPassword);
+    componentDidMount(){
+      var firebaseConfig = {
+        apiKey: "AIzaSyBLXPzQ6_czRif1OGLcspFpKrpOAzUvzKg",
+        authDomain: "todo-f3686.firebaseapp.com",
+        databaseURL: "https://todo-f3686.firebaseio.com",
+        projectId: "todo-f3686",
+        storageBucket: "todo-f3686.appspot.com",
+        messagingSenderId: "41597844625",
+        appId: "1:41597844625:web:d6f956cd3a16a92539d330",
+        measurementId: "G-D7QC32Y2P1"
+      }; 
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
     }
+    }
+   
+    writeUserData(email1,mobile1,password1,username1){
+      if(username1!='' && mobile1.length===10 ){
+        firebase.auth().createUserWithEmailAndPassword(email1,password1)
+        .then(()=>{
+            Alert.alert('Signup successful');
+            this.setState({response:true})
+            firebase.database().ref(this.state.firebaseReference).push({
+              email:email1,
+              userName:username1,
+              mobile :mobile1 , 
+              pass:password1,
+          }).then((data)=>{ 
+              console.log('data ' , data)
+          }).catch((error)=>{  
+              console.log('error ' , error)
+          })
+          })
+          
+        .catch((error)=> {
+            // console.log(error.code);
+            console.log(error.message);
+            if(error.message === "The email address is badly formatted."){
+              Alert.alert("Enter Valid Email")
+            }
+            else if(error.message === "The email address is already in use by another account."){
+              Alert.alert("Email Already taken");
+            }
+            else if(error.message === "Password should be at least 6 characters"){
+              Alert.alert("Password Have max length 6")
+            }
+          });  
+      }
+      else{
+        Alert.alert("Fill all field");
 
-    UserRegistrationFunction = () =>{
-      const { userName }  = this.state;
-      const { userEmail }  = this.state;
-      const { userPassword }  = this.state;
-     fetch('http://10.42.0.1/developments/todo/user_register.php', {
-       method: 'POST',
-       headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify({
-         name: userName,
-         email: userEmail,
-         password:userPassword,
-       })
-      
-     }).then((response) => response.text())
-           .then((responseJson) => { 
-             Alert.alert(responseJson);
-           }).catch((error) => {
-             console.error(error);
-           });
-       }
+      }    
+      }
+
+  readUserData() {
+    firebase.database().ref('ToDo/Register/').once('value',(data)=> {
+        console.log("Data" , data.toJSON())
+    });
+}
+    // componentDidUpdate(){
+    //   console.log("UserName",this.state.userName);
+    //   console.log("UserName",this.state.userEmail);
+    //   console.log("UserName",this.state.userPassword);
+    // }
   render() {
     return (
 <View>  
@@ -70,8 +104,7 @@ constructor(props) {
         <TextInput
           placeholder="Username"
           underlineColorAndroid='363636'
-          style={styles.TextInputStyleClass}
-          // onChange={(text)=>this.setState({userName:text})}
+          style={styles.TextInputStyleClass} 
           onChangeText={userName=>this.setState({userName})}
         />
         <TextInput
@@ -80,7 +113,6 @@ constructor(props) {
           autoCompleteType='email'
           style={styles.TextInputStyleClass}
           onChangeText={userEmail=>this.setState({userEmail})}
-
         />
         <TextInput
           placeholder="Password"
@@ -89,7 +121,16 @@ constructor(props) {
           onChangeText={userPassword=>this.setState({userPassword})}
           secureTextEntry={true}
         />
-        <TouchableOpacity onPress={this.UserRegistrationFunction} style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
+        <TextInput
+          placeholder="Mobile"
+          underlineColorAndroid='363636'
+          style={styles.TextInputStyleClass}
+          onChangeText={userMobile=>this.setState({userMobile})}
+        />
+        <TouchableOpacity 
+        onPress={()=>{this.writeUserData(this.state.userEmail , this.state.userMobile , this.state.userPassword , this.state.userName)}} 
+        // onPress={()=>this._authentication("ak11@gmail.com" , '123t6789')}
+        style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
        margin:16,textAlign:'center',borderColor:"0B6AEC", justifyContent:'center',fontSize:16}} >
        <Text style={{color:'white' ,fontWeight:'bold' ,fontSize:16, textAlign:'center'}}>Register</Text>       
       </TouchableOpacity>
@@ -129,3 +170,5 @@ buttonStyle:{
   marginBottom: 15
  }
 });
+
+ 
