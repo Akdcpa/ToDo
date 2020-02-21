@@ -26,33 +26,32 @@ constructor(props) {
       userPassword: '',
       userEmail:'',
       userMobile:0,
-      firebaseReference:'ToDo/Register/',
       response:false,
     }}
 
-    componentDidMount(){
-      var firebaseConfig = {
-        apiKey: "AIzaSyBLXPzQ6_czRif1OGLcspFpKrpOAzUvzKg",
-        authDomain: "todo-f3686.firebaseapp.com",
-        databaseURL: "https://todo-f3686.firebaseio.com",
-        projectId: "todo-f3686",
-        storageBucket: "todo-f3686.appspot.com",
-        messagingSenderId: "41597844625",
-        appId: "1:41597844625:web:d6f956cd3a16a92539d330",
-        measurementId: "G-D7QC32Y2P1"
-      }; 
-      if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    }
+    // componentDidMount(){
+    //   var firebaseConfig = {
+    //     apiKey: "AIzaSyBLXPzQ6_czRif1OGLcspFpKrpOAzUvzKg",
+    //     authDomain: "todo-f3686.firebaseapp.com",
+    //     databaseURL: "https://todo-f3686.firebaseio.com",
+    //     projectId: "todo-f3686",
+    //     storageBucket: "todo-f3686.appspot.com",
+    //     messagingSenderId: "41597844625",
+    //     appId: "1:41597844625:web:d6f956cd3a16a92539d330",
+    //     measurementId: "G-D7QC32Y2P1"
+    //   }; 
+    //   if (!firebase.apps.length) {
+    //     firebase.initializeApp(firebaseConfig);
+    // }
+    // }
    
     writeUserData(email1,mobile1,password1,username1){
       if(username1!='' && mobile1.length===10 ){
         firebase.auth().createUserWithEmailAndPassword(email1,password1)
-        .then(()=>{
+        .then((res)=>{
             Alert.alert('Signup successful');
             this.setState({response:true})
-            firebase.database().ref(this.state.firebaseReference).push({
+            firebase.database().ref('ToDo/Register/').child(res.user.uid).set({
               email:email1,
               userName:username1,
               mobile :mobile1 , 
@@ -63,7 +62,6 @@ constructor(props) {
               console.log('error ' , error)
           })
           })
-          
         .catch((error)=> {
             // console.log(error.code);
             console.log(error.message);
@@ -80,15 +78,8 @@ constructor(props) {
       }
       else{
         Alert.alert("Fill all field");
-
       }    
       }
-
-  readUserData() {
-    firebase.database().ref('ToDo/Register/').once('value',(data)=> {
-        console.log("Data" , data.toJSON())
-    });
-}
     // componentDidUpdate(){
     //   console.log("UserName",this.state.userName);
     //   console.log("UserName",this.state.userEmail);

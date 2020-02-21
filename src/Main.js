@@ -86,7 +86,7 @@ export default class Main extends React.Component {
     this.setState({text:''})
     }
     _onPressDetails(itemname ,index1){
-        this.props.navigation.navigate('Details',{name:itemname,index:index1})
+        this.props.navigation.navigate('Details',{name:itemname,index:index1 , email:this.props.userEmail})
     }
     render(){
 

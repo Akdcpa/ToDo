@@ -4,17 +4,16 @@ import Register from './Register'
 import Toast from 'react-native-simple-toast'
 import Logo from './../Images/back.jpeg'
 import Main from '../Main'
+import firebase from 'firebase'
+import {Base64} from 'js-base64'
 import AsyncStorage from '@react-native-community/async-storage'
+// import firebase 
 export default class Login extends Component {
 
   static navigationOptions = {  
-    title: 'ToDo',
-    // title:'Register',  
-    // headerLeft:<View style={{padding:6}}></View>,
+    title: 'ToDo', 
     headerStyle: {  
-        backgroundColor: '#363636', 
-        // textAlign:'center' 
-        // alignContent:'center' ,justifyContent:'center' , alignItems:'center'
+        backgroundColor: '#363636',  
     },
     headerLeft:null,
 
@@ -30,70 +29,85 @@ export default class Login extends Component {
 constructor(props) {
     super(props)
     this.state = {
-      UserName: '',
-      UserPassword: '',
+      userEmail: '',
+      userPassword: '',
       Login_Status:'',
+      user_auth_token:'',
     }}
-    componentDidUpdate(){
-      this.getData();
-    }
-    storeData = async (authtoken) => {
+    storeData = async (user_auth_token) => {
       try {
-        await AsyncStorage.setItem('@AuthToken', authtoken )
+        await AsyncStorage.setItem('Auth_Token', user_auth_token )
       } catch (e) {
         // saving error
       }
     }
     getData = async () => {
       try {
-        const value = await AsyncStorage.getItem('@AuthToken')
+        const value = await AsyncStorage.getItem('Auth_Token')
         if(value !== null) {
           console.log("Async Value" , value)
         }
       } catch(e) {
+        console.log(e)
       }
     }
     
     UserLoginFunction = () =>{
-      const {UserName}=this.state;
-      const {UserPassword}=this.state;
+      const {userEmail}=this.state;
+      const {userPassword}=this.state;
 
-      if(this.state.UserName===''){
-        Toast.show("Enter valid username");
+      if(this.state.userEmail===''){
+        Toast.show("Enter valid userEmail");
       }
       else{
-        if(this.state.UserPassword.length<=0){
+        if(this.state.userPassword.length<=0){
           Toast.show("Enter Valid Password");
         }
       else{
-        fetch('http://10.42.0.1/developments/todo/Login_Data.php', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name:UserName,
-            password:UserPassword,
-          })
-        }).then((response) => response.text())
-              .then((responseJson) => {
-                if(responseJson == 'UserName Wrong'){
-                  Toast.show("Invalid username/password")
-                }
-                else if(responseJson == "PasswordWrong"){
-                  Toast.show("Invalid username/password")
+        try{
+          firebase.auth().signInWithEmailAndPassword(userEmail , userPassword)
+          .then((res)=>
+          {
+            this.setState({user_auth_token:res.user.uid});
+            this.storeData(res.user.uid);
+            this.getData();
+            // firebase.database().ref('').once('value' , )
+            firebase.database().ref('ToDo/Auth/').child(Base64.encode(userEmail)).set({
+                  email:res.user.email,
+                  auth_token:res.user.uid,
+              }).then((data)=>{ 
+                  console.log('data ' , data)
+              }).catch((error)=>{  
+                  console.log('error ' , error)
+              })
+                Alert.alert("Login SuccessFull");
+              })
+           .catch((error)=>{
+             if(error.message === "The email address is badly formatted." 
+             || error.message==="There is no user record corresponding to this identifier. The user may have been deleted.")
+             {
+              Alert.alert("Invalid Email"); }
+            else if(error.message === "The password is invalid or the user does not have a password."){
+               Alert.alert("Password Wrong");
+             }  
+           })
 
-                }
-                else{
-                   this.storeData(responseJson);
-                   this.props.navigation.navigate('Main');
-                }
-              }).catch((error) => {
-                console.error(error);
-              });
-           }
+           this.props.navigation.navigate('Main' , userEmail);
+        }
+        catch(e){
+          console.log(e);
+        }
          } 
+        }
+      }
+
+      _getData(){
+          firebase.database().ref('ToDo/Register').child("-M0WBBSdrWcF-dWfQIGQ").orderByChild('email').equalTo("hSH")
+        .once('value').then(snapshot=>{
+          if(snapshot.val()){
+            console.log("Data Exists" , snapshot.val());
+          }
+        })
       }
     
   render() {
@@ -104,25 +118,28 @@ constructor(props) {
     <Text style={{fontSize:30 , fontWeight:'bold' , textAlign:'center' , marginBottom:10}} >Login</Text>
     <View>
         <TextInput
-          placeholder="Username"
+          placeholder="userEmail"
           underlineColorAndroid='black'
-          value={this.state.UserName}
-          onChangeText={UserName=>{this.setState({UserName})}}
+          value={this.state.userEmail}
+          onChangeText={userEmail=>{this.setState({userEmail})}}
           style={styles.TextInputStyleClass}
           autoCapitalize='none'
-          ref={(u) => this._username = u}
+          ref={(u) => this._userEmail = u}
         />
         <TextInput
           placeholder="Password"
           underlineColorAndroid='black'
           style={styles.TextInputStyleClass}
-          value={this.state.UserPassword}
-          onChangeText={UserPassword=>{this.setState({UserPassword})}}
+          value={this.state.userPassword}
+          onChangeText={userPassword=>{this.setState({userPassword})}}
           secureTextEntry={true}
           autoCapitalize='none'
-          ref={(u) => this._username = u}
+          ref={(u) => this._userEmail = u}
         />
-        <TouchableOpacity onPress={this.UserLoginFunction} style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
+        <TouchableOpacity 
+        onPress={this.UserLoginFunction} 
+        // onPress={()=>this._insertData(this.state.userEmail , this.state.userPassword)}
+        style={{backgroundColor:'#0B6AEC',height:50,borderRadius:30,
        margin:16,textAlign:'center',borderColor:"0B6AEC", justifyContent:'center',fontSize:16}} >
        <Text style={{color:'white' ,fontWeight:'bold' ,fontSize:16, textAlign:'center'}}>Login</Text>       
       </TouchableOpacity>
