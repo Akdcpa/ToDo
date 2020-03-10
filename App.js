@@ -78,10 +78,10 @@ class App extends React.Component{
              )
           }}  ></Stack.Screen>
           <Stack.Screen name="Details" component={Details} initialParams="Akk"
-          options={{
-            headerTitle:<Text style={{fontWeight:'bold'}} >Tasks</Text>,
-            // headerTitleAlign:'center'
-          }}
+          options={
+            // headerTitle:<Text></Text>,
+            
+          }
            ></Stack.Screen>
         </Stack.Navigator> 
         
